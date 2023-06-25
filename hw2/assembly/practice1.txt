@@ -1,0 +1,15 @@
+#t0 = a 
+lw t0, a0, 0 
+
+#t1 = b
+lw t1, a1, 0
+
+START WHILE
+blt t0, t1, ENDWHILE
+
+#create a temp b for negation
+nand t2, t1, t1
+addi t2, t2, 1
+add t0, t0, t1
+ENDWHILE
+

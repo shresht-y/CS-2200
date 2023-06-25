@@ -1,0 +1,19 @@
+CS 2200 Spring 2023
+Homework 2
+
+Name: Shreshta Yadav
+GT Username: Syadav73
+
+Question 1
+----------
+
+In order to recreate the jalr instruction, we could simply use basic branch intructions with some extra storing procedures. The psuedocode would 
+look something like this:
+
+$temp = lea + 3 offset (to get the address we want to return to)
+$ra = temp (sets ra register)
+br <target> 
+
+by using these 3 instructions, we are able to store the address we want to return to, and then go to the instruction that we would like. 
+We add 3 to the value from lea because we want to continue execution right after the unconditional branch, so that we do not have any infinite
+loops. Since jalr does not handle returning to the return address, this would be left to the callee to return.
