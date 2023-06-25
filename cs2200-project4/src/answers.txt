@@ -1,0 +1,68 @@
+CS 2200 Summer 2022
+Project 4
+
+Name:
+GT Username:
+
+Problem 1C (FCFS Scheduler)
+----------
+
+1 core: 67.9s
+2 core: 39.9s
+4 core: 37.0s 
+
+There is not a linear relatoinship between the cores and simulated execution time. The greatest difference is between 1 core and two cores.
+This is likely due to the i/o queue. I observed that in the 2 core and 4 core simulations, most of the time that the simulator runs, 
+there are only 2 processes that are being executed on the cpu at a time, and the rest are idle and waitinf for an i/o burst to finish.
+The jump from 1 to 2 cores allowed more processes to execute on the cpu, but as soon as we got more than 2, the i/o burst takes long 
+enough that the cpus have to idle and wait anyways, so it would not make a much greater difference. I confirmed this i/o hold up
+problem by running the simulation with 6, and 8 cores, and the time was the same as the 4 core simulation.
+
+Problem 2B (Round-Robin)
+----------
+
+8: 
+Total Context Switches: 131
+Total execution time: 67.9 s
+Total time spent in READY state: 317.1 s
+
+6:
+Total Context Switches: 156
+Total execution time: 67.9 s
+Total time spent in READY state: 302.3 s
+
+4: 
+Total Context Switches: 202
+Total execution time: 67.9 s
+Total time spent in READY state: 291.7 s
+
+2:
+Total Context Switches: 363
+Total execution time: 67.9 s
+Total time spent in READY state: 284.4 s
+
+In our simulation we find that the smaller timeslices are creating smaller times spent in the ready state (waiting time). This means
+that our relationship is an inverse one. While it does seem like the waiting time is decreasing in our simulation, and this is
+a good thing for an OS, this is not actually true. By observing the stats, we can also see that while the total time spent in the 
+ready state was decreasing, the amount of context switches also increased greatly. This is extremely problematic as context switches
+also come with context switch overhead, and while this overhead doesnt really matter since our simulator is very small scale, in a 
+large scale os like Windows for example, this overhead would build up quickly and overall take longer to complete all the processes
+than needed.
+
+Problem 3C (Preemptive Priority with Aging)
+----------
+
+Usually to counteract starvation, you implement a threshold for the age of a process. What this means is that when calculating priorities, 
+if you see that a process has been waiting to execute for a specific amount of time (a threshold), then you bump the priority of that process. 
+This essentially makes the process appear more important when scheduling, and will eventually be scheduled when the priority becomes large enough.
+
+Problem 4 (The Priority Inversion Problem)
+---------
+
+Since we cant preempt the window manager and force the processor to run it to completion, the best way to modify this system is to adjust priority
+values so thatthe window manager can run in time for P1. Since P1 is a high priority process that requires other processes to complete, i would 
+modify the pcb, as well as the priority values. In a system with important and related processes, I would add a section to the pcb that indicates
+which processes are related. For example, P1 would have a small section in the pcb that lists 'Window manager' as a related process. With this, 
+when my scheduler enqueues the window manager process, it can check the related processses in the pcb, and see that it is related to P1, and set 
+both of the processes to a high priority process (the same priority). This ensures that when there is a high priority process that relies on others
+to finish, my processor has a way to essentially force related processes to complete quickly.
